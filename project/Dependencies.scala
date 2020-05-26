@@ -20,6 +20,7 @@ object Libraries {
   val `cats-scalacheck` = "io.chrisdavenport" %% "cats-scalacheck" % "0.2.0"
   val `circe-core` = "io.circe" %% "circe-core" % Version.circe
 
+  val dhall = "org.dhallj" %% "dhall-scala" % "0.3.2"
   val diffx = "com.softwaremill.diffx" %% "diffx-scalatest" % Version.diffx
   val discipline = "org.typelevel" %% "discipline-core" % "1.0.0"
   val `discipline-scalatest` = "org.typelevel" %% "discipline-scalatest" % "1.0.1"
@@ -75,5 +76,12 @@ object Dependencies {
       L.shapeless,
       L.slf4j,
     )
+
+  val `game-data` = Seq(
+    L.dhall,
+  )
+
+  val actions = Seq(
+  )
 
 }

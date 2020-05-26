@@ -1,5 +1,4 @@
 package basilisk
-
-import org.w3c.dom.Attr
+package schema
 
 final case class GameSchema(attrs: Map[CardType, Attr], zones: List[Zone])
