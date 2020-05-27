@@ -23,11 +23,16 @@ lazy val `game-data` = (project in file("modules/game-data"))
   )
   .dependsOn(core)
 
-lazy val actions = (project in file("modules/actions"))
-  .settings(commonSettings,
-            name := "basilisk-actions",
-            libraryDependencies ++= Dependencies.actions)
+lazy val engine = (project in file("modules/engine"))
+  .settings(commonSettings, name := "basilisk-engine", libraryDependencies ++= Dependencies.engine)
   .dependsOn(core, `game-data`)
+
+lazy val example = (project in file("modules/example"))
+  .settings(commonSettings,
+            name := "basilisk-example",
+            libraryDependencies ++= Dependencies.example,
+            publish / skip := true)
+  .dependsOn(engine)
 
 lazy val root = (project in file("."))
   .settings(
@@ -35,7 +40,7 @@ lazy val root = (project in file("."))
     name := "root",
   )
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(core, `game-data`, actions)
+  .aggregate(core, `game-data`, engine, example)
 
 //// Jar publishing settings
 // Don't publish the "root" project, only the modules

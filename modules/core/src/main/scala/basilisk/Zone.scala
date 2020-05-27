@@ -1,10 +1,36 @@
 package basilisk
 
-case class Zone(
+sealed trait Zone {
+  type P <: ZonePositioning
+  def positioning: P
+
+  def id: ZoneId
+  def schema: ZoneSchema
+
+  assert(positioning == schema.positioning)
+}
+
+object Zone {
+  type Aux[P0 <: ZonePositioning] = Zone { type P = P0 }
+
+  // Convenience aliases
+  type Ordered = Zone.Aux[ZonePositioning.Ordered.type]
+  type Unordered = Zone.Aux[ZonePositioning.Unordered.type]
+  type XYPoint = Zone.Aux[ZonePositioning.XYPoint.type]
+}
+
+class OrderedZone(val id: ZoneId, val schema: ZoneSchema, val members: Vector[Card]) extends Zone {
+  type P = ZonePositioning.Ordered.type
+  val positioning = ZonePositioning.Ordered
+}
+
+case class ZoneId(value: Int) extends AnyVal
+
+case class ZoneSchema(
     name: String,
     visibility: ZoneVisibility,
     ownership: ZoneOwnership,
-    positions: ZonePositioning
+    positioning: ZonePositioning
 )
 
 sealed trait ZoneVisibility
@@ -32,6 +58,7 @@ object ZoneOwnership {
   case object Shared extends ZoneOwnership
 }
 
+// TODO might scrap all the type safe ordering logic - UnsupportedOperation errors may be good enough
 sealed trait ZonePositioning
 
 object ZonePositioning {
@@ -48,4 +75,19 @@ object ZonePositioning {
     */
   case object XYPoint extends ZonePositioning
 
+}
+
+sealed trait ZoneOwner
+
+object ZoneOwner {
+  case object Shared extends ZoneOwner
+  case class Owned(player: basilisk.Player) extends ZoneOwner
+}
+
+sealed trait ZonePosition[ZO <: ZonePositioning]
+
+object ZonePosition {
+  case class Index(value: Int) extends ZonePosition[ZonePositioning.Ordered.type]
+  case object Present extends ZonePosition[ZonePositioning.Unordered.type]
+  case class Point(x: Int, y: Int) extends ZonePosition[ZonePositioning.XYPoint.type]
 }
