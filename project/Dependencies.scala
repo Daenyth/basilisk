@@ -2,6 +2,17 @@ import sbt._
 
 object Libraries {
 
+  val libs =
+    org.typelevel.libraries
+      .add("cats-stm", version = "0.7.0", org = "io.github.timwspence")
+      .add("munit", version = "0.7.9", org = "org.scalameta", "munit-scalacheck", "munit")
+      .add("dhall", version = "0.3.2", org = "org.dhallj", "dhall-scala")
+      .add("fs2", version = "2.4.2")
+      .addScalacPlugin("better-monadic-for",
+                       version = "0.3.1",
+                       org = "com.olegpy",
+                       crossVersion = CrossVersion.binary)
+
   object Version {
     val cats = "2.1.1"
     val `cats-effect` = "2.1.3"

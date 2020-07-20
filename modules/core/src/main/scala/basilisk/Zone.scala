@@ -15,13 +15,19 @@ object Zone {
 
   // Convenience aliases
   type Ordered = Zone.Aux[ZonePositioning.Ordered.type]
-  type Unordered = Zone.Aux[ZonePositioning.Unordered.type]
-  type XYPoint = Zone.Aux[ZonePositioning.XYPoint.type]
-}
 
-class OrderedZone(val id: ZoneId, val schema: ZoneSchema, val members: Vector[Card]) extends Zone {
-  type P = ZonePositioning.Ordered.type
-  val positioning = ZonePositioning.Ordered
+  def ordered(id: ZoneId, schema: ZoneSchema): Ordered =
+    new ZoneImpl(id, schema, ZonePositioning.Ordered)
+  type Unordered = Zone.Aux[ZonePositioning.Unordered.type]
+
+  def unordered(id: ZoneId, schema: ZoneSchema): Unordered =
+    new ZoneImpl(id, schema, ZonePositioning.Unordered)
+  type XYPoint = Zone.Aux[ZonePositioning.XYPoint.type]
+
+  class ZoneImpl[P0 <: ZonePositioning](val id: ZoneId, val schema: ZoneSchema, val positioning: P0)
+      extends Zone {
+    type P = P0
+  }
 }
 
 case class ZoneId(value: Int) extends AnyVal
